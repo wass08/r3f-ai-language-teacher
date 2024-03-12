@@ -11,7 +11,7 @@ import {
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Leva, button, useControls } from "leva";
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { degToRad } from "three/src/math/MathUtils";
 import { BoardSettings } from "./BoardSettings";
 import { MessagesList } from "./MessagesList";
@@ -27,7 +27,7 @@ const itemPlacement = {
       position: [-1, -1.7, -3],
     },
     board: {
-      position: [0.22, 0.192, -3],
+      position: [0.45, 0.382, -6],
     },
   },
   alternative: {
@@ -37,7 +37,7 @@ const itemPlacement = {
       scale: 0.4,
     },
     teacher: { position: [-1, -1.7, -3] },
-    board: { position: [0.7, 0.42, -4] },
+    board: { position: [1.4, 0.84, -8] },
   },
 };
 
@@ -59,30 +59,32 @@ export const Experience = () => {
       >
         <CameraManager />
 
-        <Float speed={0.5} floatIntensity={0.2} rotationIntensity={0.1}>
-          <Html
-            transform
-            {...itemPlacement[classroom].board}
-            distanceFactor={0.5}
-          >
-            <MessagesList />
-            <BoardSettings />
-          </Html>
-          <Environment preset="sunset" />
-          <ambientLight intensity={0.8} color="pink" />
+        <Suspense>
+          <Float speed={0.5} floatIntensity={0.2} rotationIntensity={0.1}>
+            <Html
+              transform
+              {...itemPlacement[classroom].board}
+              distanceFactor={1}
+            >
+              <MessagesList />
+              <BoardSettings />
+            </Html>
+            <Environment preset="sunset" />
+            <ambientLight intensity={0.8} color="pink" />
 
-          <Gltf
-            src={`/models/classroom_${classroom}.glb`}
-            {...itemPlacement[classroom].classroom}
-          />
-          <Teacher
-            teacher={teacher}
-            key={teacher}
-            {...itemPlacement[classroom].teacher}
-            scale={1.5}
-            rotation-y={degToRad(20)}
-          />
-        </Float>
+            <Gltf
+              src={`/models/classroom_${classroom}.glb`}
+              {...itemPlacement[classroom].classroom}
+            />
+            <Teacher
+              teacher={teacher}
+              key={teacher}
+              {...itemPlacement[classroom].teacher}
+              scale={1.5}
+              rotation-y={degToRad(20)}
+            />
+          </Float>
+        </Suspense>
       </Canvas>
     </>
   );
